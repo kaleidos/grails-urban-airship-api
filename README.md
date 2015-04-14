@@ -9,7 +9,7 @@ To install de plugin you should add the dependency in your BuildConfig.groovy
 ```groovy
 plugins {
     ...
-    runtime ":urban-air-ship:1.0" 
+    compile ":urban-air-ship:1.0.1" 
 }
 ```
 
@@ -45,3 +45,5 @@ urbanAirship.appMasterSecret = _your app master secret_
 
 ### v1.0 (14/04/2015)
 - Initial version
+### v1.0.01 (14/04/2015)
+- Fix documentation links
