@@ -1,18 +1,20 @@
 package net.kaleidos.urbanairship
 
-import com.urbanairship.api.client.*
-import com.urbanairship.api.client.model.*
+import com.urbanairship.api.client.APIClient
+import com.urbanairship.api.client.APIError
+import com.urbanairship.api.client.APIErrorDetails
+import com.urbanairship.api.client.APIRequestException
+import com.urbanairship.api.client.model.APIClientResponse
+import com.urbanairship.api.client.model.APIPushResponse
 import com.urbanairship.api.push.model.DeviceType
 import com.urbanairship.api.push.model.DeviceTypeData
 import com.urbanairship.api.push.model.PushPayload
 import com.urbanairship.api.push.model.audience.Selectors
-import com.urbanairship.api.push.model.notification.Notifications
 import com.urbanairship.api.push.model.notification.Notification
-import com.urbanairship.api.push.model.notification.actions.*
-import com.urbanairship.api.push.model.notification.interactive.Interactive
-import com.urbanairship.api.schedule.model.Schedule
-import com.urbanairship.api.schedule.model.SchedulePayload
+import com.urbanairship.api.push.model.notification.actions.Actions
+import com.urbanairship.api.push.model.notification.actions.DeepLinkAction
 import com.urbanairship.api.push.model.notification.android.AndroidDevicePayload
+import com.urbanairship.api.push.model.notification.interactive.Interactive
 import com.urbanairship.api.push.model.notification.ios.IOSDevicePayload
 
 import org.springframework.beans.factory.InitializingBean
@@ -42,7 +44,7 @@ class UrbanAirshipService implements InitializingBean {
                                         .setAudience(Selectors.alias(alias))
 
         def notificationBuilder = Notification.newBuilder()
-        notificationBuilder.setAlert(alert)
+        notificationBuilder.alert = alert
 
         if (customFields) {
             notificationBuilder.addDeviceTypeOverride(DeviceType.ANDROID,
@@ -54,16 +56,15 @@ class UrbanAirshipService implements InitializingBean {
                                     .addAllExtraEntries(customFields).build())
         }
 
-
         if (additionalParams?.openLink != null) {
             def actionsBuilder = Actions.newBuilder()
             actionsBuilder.setOpen(new DeepLinkAction(additionalParams.openLink))
-            notificationBuilder.setActions(actionsBuilder.build())
+            notificationBuilder.actions = actionsBuilder.build()
         }
 
         if (additionalParams?.interactive != null) {
             def interactiveBuilder = Interactive.newBuilder()
-            interactiveBuilder.setType(additionalParams.interactive.type)
+            interactiveBuilder.type = additionalParams.interactive.type
 
             if (additionalParams.interactive?.links) {
                 Map buttonActions = [:]
@@ -72,40 +73,38 @@ class UrbanAirshipService implements InitializingBean {
                                                           .setOpen(new DeepLinkAction(entry.value))
                                                           .build()]
                 }
-                interactiveBuilder.setButtonActions(buttonActions)
+                interactiveBuilder.buttonActions = buttonActions
             }
-            notificationBuilder.setInteractive(interactiveBuilder.build())
+            notificationBuilder.interactive = interactiveBuilder.build()
         }
 
-        payloadBuilder.setNotification(notificationBuilder.build())
-        payloadBuilder.setDeviceTypes(DeviceTypeData.newBuilder()
+        payloadBuilder.notification = notificationBuilder.build()
+        payloadBuilder.deviceTypes = DeviceTypeData.newBuilder()
                                                     .addDeviceType(DeviceType.IOS)
                                                     .addDeviceType(DeviceType.ANDROID)
-                                                    .build())
+                                                    .build()
         PushPayload payload = payloadBuilder.build()
 
         log.debug "PAYLOAD: ${payload.toJSON()}"
 
         try {
             APIClientResponse<APIPushResponse> response = apiClient.push(payload)
-            log.debug("PUSH SUCCEEDED")
-            log.debug("RESPONSE: ${response.toString()}")
+            log.debug("PUSH SUCCEEDED\nRESPONSE: $response")
         }
         catch (APIRequestException ex){
-            log.error("APIRequestException $ex")
-            log.error("EXCEPTION ${ex.toString()}")
+            log.error("APIRequestException $ex\nEXCEPTION $ex")
 
-            APIError apiError = ex.getError().get()
-            log.error("Error ${apiError.getError()}")
-            if (apiError.getDetails().isPresent())     {
-                APIErrorDetails apiErrorDetails = apiError.getDetails().get()
-                log.error("Error details ${apiErrorDetails.getError()}")
+            APIError apiError = ex.error.get()
+            log.error("Error $apiError.error")
+            if (apiError.details.present)     {
+                APIErrorDetails apiErrorDetails = apiError.details.get()
+                log.error("Error details $apiErrorDetails.error")
             }
 
             throw ex
         }
         catch (IOException e){
-            log.error("IOException in API request ${e.getMessage()}")
+            log.error("IOException in API request $e.message")
 
             throw e
         }
@@ -117,5 +116,4 @@ class UrbanAirshipService implements InitializingBean {
             .setSecret(urbanAirshipConfig.appMasterSecret)
             .build()
     }
-
 }

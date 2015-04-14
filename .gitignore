@@ -1,4 +1,12 @@
-grails-urban-airship-api*
-plugin.xml
-target
-web-app
+.classpath
+.DS_Store
+.settings
+.project
+*.iws
+*.log
+*.swp
+/grails-urban-airship-api-*.zip
+/grails-urban-airship-api-*.zip.sha1
+/plugin.xml
+/target
+/web-app

@@ -22,8 +22,7 @@ class UrbanAirshipApiGrailsPlugin {
     def license = "APACHE"
     def organization = [ name: "Kaleidos", url: "http://kaleidos.net" ]
     def developers = [ [ name: "Alonso Torres", email: "alonso.torres@kaleidos.net" ]]
-    def issueManagement = [ system: "GITHUB", url: "https://github.com/kaleidos/grails-urban-airship/issues" ]
+    def issueManagement = [url: "https://github.com/kaleidos/grails-urban-airship/issues" ]
 
-    def scm = [ url: "http://svn.codehaus.org/grails-plugins/" ]
-
+    def scm = [url: 'https://github.com/kaleidos/grails-urban-airship']
 }
