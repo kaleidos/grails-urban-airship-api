@@ -1,5 +1,5 @@
 class UrbanAirshipApiGrailsPlugin {
-    def version = "1.0"
+    def version = "1.0.1"
     def grailsVersion = "2.0 > *"
 
     def pluginExcludes = [
@@ -17,12 +17,12 @@ class UrbanAirshipApiGrailsPlugin {
     def authorEmail = "antonio.delatorre@kaleidos.net"
     def description = "Easy integration with the API for the notifications system Urban Airship"
 
-    def documentation = "http://grails.org/plugin/urban-airship-api"
+    def documentation = "https://github.com/kaleidos/grails-urban-airship-api/blob/master/README.md"
 
     def license = "APACHE"
     def organization = [ name: "Kaleidos", url: "http://kaleidos.net" ]
     def developers = [ [ name: "Alonso Torres", email: "alonso.torres@kaleidos.net" ]]
-    def issueManagement = [url: "https://github.com/kaleidos/grails-urban-airship/issues" ]
+    def issueManagement = [url: "https://github.com/kaleidos/grails-urban-airship-api/issues" ]
 
-    def scm = [url: 'https://github.com/kaleidos/grails-urban-airship']
+    def scm = [url: 'https://github.com/kaleidos/grails-urban-airship-api']
 }
