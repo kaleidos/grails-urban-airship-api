@@ -1,8 +1,8 @@
 package net.kaleidos.urbanairship
 
-import com.urbanairship.api.client.APIClient
-import grails.test.mixin.TestFor
 import spock.lang.Specification
+
+import com.urbanairship.api.client.APIClient
 
 @TestFor(UrbanAirshipService)
 class UrbanAirshipServiceSpec extends Specification {
@@ -11,7 +11,7 @@ class UrbanAirshipServiceSpec extends Specification {
 
     void setup() {
         service.grailsApplication.config = [
-            "urbanAirship" : [
+            urbanAirship : [
                 appKey : "appKey",
                 appSecret : "appSecret",
                 appMasterSecret : "appMasterSecret"
@@ -26,9 +26,7 @@ class UrbanAirshipServiceSpec extends Specification {
             service.afterPropertiesSet()
 
             def mockApiClient = Mock(APIClient)
-            service.metaClass.getApiClient  = { ->
-                return mockApiClient
-            }
+            service.metaClass.getApiClient  = { -> mockApiClient }
 
         when:
             service.sendPush(alias, message)
