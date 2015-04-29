@@ -1,5 +1,5 @@
 class UrbanAirshipApiGrailsPlugin {
-    def version = "1.0.1"
+    def version = "1.0.3"
     def grailsVersion = "2.0 > *"
 
     def pluginExcludes = [
